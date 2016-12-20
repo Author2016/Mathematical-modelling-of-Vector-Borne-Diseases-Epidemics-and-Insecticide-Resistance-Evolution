@@ -1,0 +1,89 @@
+clc
+clear
+
+K = 200000;
+c = 0.000457;
+uh = c;
+y = 0.121;
+o = 6.353;
+uaa = 0.25;
+uAA = 0.25;
+uAa = uAA;
+Bh = 0.4;
+Bv = 0.4;
+
+Sh(1) = 9000;
+Ih(1) = 200;
+Rh(1) = 300;
+Nh(1) = Sh(1) + Ih(1) + Rh(1);
+Saa(1) = 4750;
+Iaa(1) = 4750;
+Naa(1) = Saa(1) + Iaa(1);
+SAA(1) = 2375;
+IAA(1) = 2375;
+NAA(1) = SAA(1) + IAA(1);
+SAa(1) = 2375;
+IAa(1) = 2375;
+NAa(1) = SAa(1) + IAa(1);
+SAx(1) = 4750;
+IAx(1) = 4750;
+I(1) = Iaa(1) + IAA(1) + IAa(1);
+N(1) = Naa(1) + NAA(1) + NAa(1);
+Faa(1) = Naa(1)/N(1);
+FAa(1) = NAa(1)/N(1);
+FAA(1) = NAA(1)/N(1);
+
+dt = 0.1;
+
+for t=1:500-1 
+
+    Sh(t + 1) = Sh(t) + dt*(Nh(t)*uh - ((Bh*I(t)/Nh(t)) + uh)*Sh(t));
+    Ih(t + 1) = Ih(t) + dt*((Bh*Sh(t)*I(t)/Nh(t)) - (y + uh)*Ih(t));
+    Rh(t + 1 )= Rh(t) + dt*(y*Ih(t) - uh*Rh(t));
+    Nh(t + 1) = Sh(1 + t) + Ih(t+ 1) + Rh(t+1);
+
+    Saa(t + 1) = Saa(t) + dt * ((((2 * Naa(t) + NAa(t))/(2*N(t)))^2)* o *N(t) * (1 - N(t)/K) - ((Bv * Ih(t) / Nh(t)) + uaa) * Saa(t));
+    Iaa(t + 1) = Iaa(t) + dt*((Bv * Saa(t) * Ih(t) / Nh(t)) - uaa * Iaa(t));
+    Naa(t + 1) = Saa(t + 1) + Iaa(t + 1);
+
+    SAA(t + 1) = SAA(t) + dt * ((((2 * NAA(t) + NAa(t)) / (2 * N(t))) ^ 2) * o * N(t) * (1 - N(t)/K) - (( Bv * Ih(t) / Nh(t)) + uAA) * SAA(t));
+    IAA(t + 1) = IAA(t) + dt*((Bv * SAA(t) * Ih(t) / Nh(t)) - uAA * IAA(t));
+    NAA(t + 1) = SAA(t + 1) + IAA(t + 1);
+
+    SAa(t + 1) = SAa(t) + dt * (( 2 * ((2 * Naa(t) + NAa(t))/(2 * N(t))) * ((2 * NAA(t) + NAa(t)) / (2 * N(t)))) * o * N(t) * (1 - N(t)/K) - ((Bv * Ih(t) / Nh(t)) + uAa) * SAa(t));
+    IAa(t + 1) = IAa(t) + dt * ((Bv * SAa(t) * Ih(t) / Nh(t)) - uAa * IAa(t));
+    NAa(t + 1) = SAa(t + 1) + IAa(t + 1);
+
+    N(t + 1) = Naa(t + 1) + NAA(t + 1) + NAa(t + 1);
+    S(t + 1) = Saa(t + 1) + SAa(t + 1) + SAA(t + 1);
+    I(t + 1) = Iaa(t + 1) + IAA(t + 1) + IAa(t + 1);
+
+    SAx(t + 1) = SAA(t + 1) + SAa(t + 1);
+    IAx(t + 1) = IAA(t + 1) + IAa(t + 1);
+
+    Faa(t + 1) = Naa(t)/N(t);
+    FAa(t + 1) = NAa(t)/N(t);
+    FAA(t + 1) = NAA(t)/N(t);
+    
+end
+
+t = 1:500
+
+figure(1)
+plot(t, Sh, t, Ih, t,  Rh);
+hleg1 = legend('S_{h}','I_{h}','R_{h}');
+figure(2)
+plot(t, Iaa, t, IAx);
+hleg2 = legend('I_{aa}','I_{Ax}');
+figure(3)
+plot(t, Saa, t, SAx);
+hleg3 = legend('S_{aa}','S_{Ax}');
+figure(4)
+plot(t, (2.*NAA + NAa)./(2.*N), t, (2.*Naa + NAa)./(2.*N));
+hleg4 = legend('p', 'q');
+figure(5)
+plot(t, N, t, S, t, I);
+hleg5 = legend('Total vectors', 'Total susceptible vectors', 'Total infected vectors');
+figure(6)
+plot(t, Faa, t, FAa, t, FAA)
+hleg6 = legend('f(aa)', 'f(Aa)', 'f(AA)')
