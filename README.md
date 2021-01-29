@@ -1,6 +1,8 @@
 # Mathematical-modelling-of-Vector-Borne-Diseases-Epidemics-and-Insecticide-Resistance-Evolution
 
-This is the MATLAB programation used in the manuscript "Mathematical Modelling of Vector-Borne Diseases Epidemics and Insecticide Resistance Evolution".
+This is the MATLAB programation used in the manuscript "Mathematical Modelling of Vector-Borne Diseases Epidemics and Insecticide Resistance Evolution", published on the Journal of Venomous Animals and Toxins including Tropical Diseases by Gabriel Kuniyoshi and Pio dos Santos.
+
+DOI for the article: [https://doi.org/10.1186/s40409-017-0123-x](url)
 
 **License:** Creative Commons Attribution License 4.0.
 More information on this kind of license can be found on [https://creativecommons.org/licenses/by/4.0/](url)
